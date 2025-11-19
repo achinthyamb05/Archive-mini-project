@@ -29,7 +29,6 @@ const bookSchema = mongoose.Schema(
             type: Number, 
             required: true 
         },
-        // ADDED/MODIFIED: ISBN field definition
         
         reviews: [{ 
             type: mongoose.Schema.Types.ObjectId, 
