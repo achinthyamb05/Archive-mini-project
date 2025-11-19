@@ -1,18 +1,48 @@
-// backend/middleware/auth.js
 
-// WARNING: THIS FILE BYPASSES ALL AUTHENTICATION FOR ALL ROUTES THAT USE IT.
 
-const protect = (req, res, next) => {
-    // Using a valid 24-character hexadecimal string for Mongoose ObjectId compatibility
-    req.user = {
-        _id: '60c72b2f9f1b9f00159491a1', 
-        username: 'BypassUser',
-        email: 'bypass@example.com',
-        isAdmin: false,
-    };
+const jwt = require('jsonwebtoken');
+const asyncHandler = require('express-async-handler');
+const User = require('../models/user'); 
+
+const protect = asyncHandler(async (req, res, next) => {
+    let token;
+
     
-    next(); 
-};
+    if (req.cookies.jwt) {
+        token = req.cookies.jwt;
+    } 
+    
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
 
+
+    if (token) {
+        try {
+            // Verify token and decode user ID
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            // Fetch user from database and attach to req.user (excluding the password)
+            // Assumes the token payload uses the key 'id' for the user ID.
+            req.user = await User.findById(decoded.id).select('-password'); 
+
+            if (!req.user) {
+                // This means a valid token was found, but the user ID in the token doesn't exist.
+                res.status(401);
+                throw new Error('Not authorized, user not found in database.');
+            }
+
+            next();
+        } catch (error) {
+            // Token is invalid, expired, or failed verification
+            console.error(error); 
+            res.status(401);
+            throw new Error('Not authorized, token failed or expired.');
+        }
+    } else { // No token found in cookie or header
+        res.status(401);
+        throw new Error('Not authorized, no token');
+    }
+});
 
 module.exports = { protect };
