@@ -1,5 +1,3 @@
-// backend/routes/authroutes.js
-
 const express = require('express');
 const {
     registerUser,
@@ -7,8 +5,10 @@ const {
     logoutUser,
     getUserProfile,
     updateUserProfile,
-} = require('../controllers/usercontroller'); 
-const { protect } = require('../middleware/auth'); // Use require
+    deleteUser, 
+} = require('../controllers/usercontroller'); // ⬅️ Ensure 'usercontroller' is lowercase
+
+const { protect } = require('../middleware/auth'); 
 
 const router = express.Router();
 
@@ -17,9 +17,13 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/logout', logoutUser);
 
-// Private routes
+
 router.route('/profile')
     .get(protect, getUserProfile)
     .put(protect, updateUserProfile);
+    
 
-module.exports = router; // Use module.exports
+
+router.route('/:id').delete(protect, deleteUser); 
+
+module.exports = router;

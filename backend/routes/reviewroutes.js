@@ -2,15 +2,15 @@
 
 const express = require('express');
 const router = express.Router();
-// CRITICAL: Import the controller function using the correct name
-const { reviewcontroller } = require('../controllers/reviewcontroller'); 
+const { createReview, getAllReviews } = require('../controllers/reviewcontroller');
+const { protect } = require('../middleware/auth'); 
 
-// Placeholder POST route for submitting a review
-// The handler must be correctly imported and be a function.
+
+router.route('/')
+    .get(getAllReviews); // <-- NEW ROUTE
+
+
 router.route('/:bookId')
-    .post(reviewcontroller); // The review logic should be implemented in reviewcontroller
-
-// Placeholder GET route to fetch reviews (already done in getBookById, but often duplicated here)
-// router.route('/:bookId/reviews').get(getReviewsByBookId); 
+    .post(protect, createReview);
 
 module.exports = router;

@@ -3,24 +3,28 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const cookieParser = require('cookie-parser'); // REQUIRED to read the JWT cookie
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db'); 
 const { notFound, errorHandler } = require('./middleware/errormiddleware'); 
 
-// --- Configuration ---
+
 dotenv.config();
 connectDB(); 
 const app = express();
 
-// --- Middleware ---
-app.use(cors()); 
+
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  credentials: true, 
+}));
+
 app.use(express.json()); 
-app.use(cookieParser()); // Initialize cookie-parser
+app.use(cookieParser());
 
 // --- Routes ---
 app.use('/api/auth', require('./routes/authroutes'));
-app.use('/api/books', require('./routes/bookroutes')); // Ensure this file exports router
-app.use('/api/reviews', require('./routes/reviewroutes')); // Ensure this file exports router
+app.use('/api/books', require('./routes/bookroutes')); 
+app.use('/api/reviews', require('./routes/reviewroutes')); 
 
 // --- Error Handling Middleware ---
 app.use(notFound);
