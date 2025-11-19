@@ -209,7 +209,7 @@ const AdminArea = () => {
     try {
         const payload = {
             ...bookData,
-            // Convert comma-separated genre string into an array of strings for Mongoose
+            // Convert comma separated genre string into an array of strings for Mongoose
             genre: bookData.genre.split(',').map(g => g.trim()).filter(g => g.length > 0),
             // Ensure year is a number
             publicationYear: parseInt(bookData.publicationYear),

@@ -210,7 +210,6 @@ const UserProfile = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [showSubmissionForm, setShowSubmissionForm] = useState(false);
   
-  // State: ISBN field is correctly removed
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -220,7 +219,7 @@ const UserProfile = () => {
   });
   const [message, setMessage] = useState(null);
 
-  // 1. Authentication Check & Load User Info
+  // 1. Authentication Check & Load User Info (FIX APPLIED HERE)
   useEffect(() => {
     const storedUser = localStorage.getItem('userInfo');
     if (!storedUser) {
@@ -228,7 +227,17 @@ const UserProfile = () => {
       return;
     }
     try {
-      setUserInfo(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      
+      // ✅ FIX: Check for required keys to prevent crash during render
+      if (!parsedUser || !parsedUser.username || !parsedUser.email) {
+          console.error("User info missing required fields, redirecting.");
+          localStorage.removeItem('userInfo');
+          navigate('/auth');
+          return;
+      }
+      setUserInfo(parsedUser);
+
     } catch (e) {
       console.error("Failed to parse user info:", e);
       localStorage.removeItem('userInfo');
@@ -236,7 +245,13 @@ const UserProfile = () => {
     }
   }, [navigate]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+        await axios.post('http://localhost:5000/api/auth/logout', {}, { withCredentials: true });
+    } catch (error) {
+        console.warn("Backend logout failed:", error);
+    }
+    
     localStorage.removeItem('userInfo');
     navigate('/');
     window.location.reload(); 
@@ -256,8 +271,8 @@ const UserProfile = () => {
         const config = {
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${userInfo.token}` 
-            }
+            },
+            withCredentials: true,
         };
         
         const { data } = await axios.post('http://localhost:5000/api/books', formData, config);
@@ -267,7 +282,6 @@ const UserProfile = () => {
             error: false 
         });
         
-        // Clear the form fields after successful submission
         setFormData({ title: '', author: '', genre: '', publicationYear: '', description: '' });
 
     } catch (error) {
@@ -279,7 +293,8 @@ const UserProfile = () => {
     }
   };
 
-  if (!userInfo) {
+  // ✅ FIX: Strong check before returning complex JSX
+  if (!userInfo || !userInfo.username) {
     return <ProfileContainer>Loading...</ProfileContainer>; 
   }
   
@@ -341,7 +356,6 @@ const UserProfile = () => {
               <Input type="text" id="genre" name="genre" value={formData.genre} onChange={handleChange} required />
             </InputGroup>
             
-            {/* ✅ UPDATED: Enforcing 4-digit year format */}
             <InputGroup> 
               <Label htmlFor="publicationYear">Publication Year (YYYY)</Label>
               <Input 

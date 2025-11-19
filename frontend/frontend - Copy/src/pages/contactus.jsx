@@ -172,10 +172,56 @@ const InfoDetails = styled.div`
   }
 `;
 
+// Custom Modal (replacing alert())
+const ModalBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: ${props => (props.show ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 90%;
+  width: 400px;
+`;
+
+const ModalTitle = styled.h3`
+  color: #ff69b4;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+`;
+
+const ModalButton = styled.button`
+  background-color: #ff69b4;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: #ff4081;
+  }
+`;
+
 // --- Component ---
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -184,9 +230,16 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Thank you for your message! (In a real app, this would submit to a backend API)");
+    
+    // Show custom confirmation modal instead of alert()
+    setShowModal(true);
+
     // Future logic: Submit data via Axios or Fetch
     setFormData({ name: '', email: '', subject: '', message: '' });
+  };
+
+  const closeModal = () => {
+      setShowModal(false);
   };
 
   return (
@@ -243,8 +296,8 @@ const Contact = () => {
               <InfoIcon><FaPhone /></InfoIcon>
               <InfoDetails>
                 <h4>Call Us</h4>
-                <p>Reach out to our support team during business hours (9am - 5pm EST).</p>
-                <p style={{ fontWeight: 'bold', color: '#ff69b4' }}>+1 (555) BOOK-LOVE</p>
+                <p>Reach out to us!</p>
+                <p style={{ fontWeight: 'bold', color: '#ff69b4' }}>+91 XXXXX XXXXX</p>
               </InfoDetails>
             </InfoCard>
             
@@ -252,13 +305,22 @@ const Contact = () => {
               <InfoIcon><FaMapMarkerAlt /></InfoIcon>
               <InfoDetails>
                 <h4>Our Office</h4>
-                <p>We're located in the heart of the literary district, virtually!</p>
-                <p style={{ fontWeight: 'bold', color: '#ff69b4' }}>101 Reader's Lane, Booktown, USA</p>
+                <p>We're located in the heart of the tech hub, virtually!</p>
+                <p style={{ fontWeight: 'bold', color: '#ff69b4' }}>The Archive, Bengaluru, Karnataka, India</p>
               </InfoDetails>
             </InfoCard>
           </InfoCardContainer>
         </ContactGrid>
       </ContentWrapper>
+      
+      {/* Custom Submission Modal */}
+      <ModalBackdrop show={showModal} onClick={closeModal}>
+          <ModalContent onClick={e => e.stopPropagation()}>
+              <ModalTitle>Message Sent!</ModalTitle>
+              <p>THANK YOU FOR YOUR MESSAGE !! 🩷</p>
+              <ModalButton onClick={closeModal}>Close</ModalButton>
+          </ModalContent>
+      </ModalBackdrop>
     </ContactContainer>
   );
 };

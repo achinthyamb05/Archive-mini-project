@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { FaSignInAlt, FaUserPlus, FaSpinner, FaBookReader } from 'react-icons/fa';
 import axios from 'axios';
 
+// --- Styled Components (omitted for brevity) ---
+// ... (Your styled components remain here) ...
 const AuthContainer = styled.div`
   min-height: 80vh;
   background-color: #fffafb;
@@ -128,6 +130,7 @@ const Message = styled.div`
     text-align: center;
     font-weight: 500;
 `;
+// --- End Styled Components ---
 
 
 const LoginRegister = () => {
@@ -177,6 +180,7 @@ const LoginRegister = () => {
     // Payload preparation
     const config = {
       headers: { 'Content-Type': 'application/json' },
+      withCredentials: true, 
     };
     
     const url = isLogin 
@@ -184,21 +188,21 @@ const LoginRegister = () => {
         : 'http://localhost:5000/api/auth/register';
 
     try {
-      // Use destructuring to ensure we only send necessary fields
       const { data } = await axios.post(
         url,
         isLogin ? { email: formData.email, password: formData.password } : { username: formData.username, email: formData.email, password: formData.password },
         config
       );
 
-      // Save user info and token to local storage
       localStorage.setItem('userInfo', JSON.stringify(data));
       
       setMessage({ text: `${isLogin ? 'Login' : 'Registration'} successful! Redirecting...`, error: false });
       
-      // Redirect to profile page after a short delay
-      // The destination page may need to be adjusted based on your actual user profile route
-      setTimeout(() => navigate('/profile'), 1000); 
+      // ✅ MODIFIED: Navigate to home ('/') and force a full page reload.
+      setTimeout(() => {
+        navigate('/'); // Navigate to the home page
+        window.location.reload(); // Force the browser to reload
+      }, 1000); 
       
     } catch (err) {
       const errorMessage = err.response && err.response.data.message

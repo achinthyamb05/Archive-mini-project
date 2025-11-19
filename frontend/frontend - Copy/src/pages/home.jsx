@@ -120,7 +120,7 @@ const Home = () => {
   return (
     <HomeContainer>
       <HeroTitle>
-        Welcome to **Archive**
+        Welcome to Archive
       </HeroTitle>
       <HeroSubtitle>
         Explore new and popular books, share opinions, and connect with other readers.
@@ -150,11 +150,7 @@ const Home = () => {
             <FeatureHeading>Write and Share Reviews</FeatureHeading>
             <FeatureText>Express your thoughts with detailed reviews and ratings that influence the reading community.</FeatureText>
           </FeatureCard>
-          <FeatureCard>
-            <FeatureIcon>👥</FeatureIcon>
-            <FeatureHeading>Connect with Book Lovers</FeatureHeading>
-            <FeatureText>Follow friends, join discussions, and create reading groups to share your passion.</FeatureText>
-          </FeatureCard>
+          
         </FeatureList>
       </FeatureSection>
     </HomeContainer>

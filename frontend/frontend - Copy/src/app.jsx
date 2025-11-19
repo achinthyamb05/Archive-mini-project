@@ -31,7 +31,10 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/books" element={<BookListings />} />
-          <Route path="/book/:id" element={<BookDetails />} /> 
+          
+          {/* 🚨 FIX APPLIED HERE: Changed from "/book/:id" to match the link: "/books/:id" */}
+          <Route path="/books/:id" element={<BookDetails />} /> 
+          
           <Route path="/trending" element={<TrendingReviews />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<ContactUs />} />

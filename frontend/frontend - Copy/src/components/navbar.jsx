@@ -179,15 +179,12 @@ const Navbar = () => {
       <NavItem to="/books" onClick={() => setIsMobileMenuOpen(false)}>
         Books
       </NavItem>
-      {/* 🛑 FIX: Changed to match App.jsx path="/trending" */}
       <NavItem to="/trending" onClick={() => setIsMobileMenuOpen(false)}> 
         Trending Reviews
       </NavItem>
-      {/* 🛑 FIX: Changed to match App.jsx path="/about" */}
       <NavItem to="/about" onClick={() => setIsMobileMenuOpen(false)}> 
         About Us
       </NavItem>
-      {/* 🛑 FIX: Changed to match App.jsx path="/contact" */}
       <NavItem to="/contact" onClick={() => setIsMobileMenuOpen(false)}> 
         Contact
       </NavItem>
@@ -215,7 +212,6 @@ const Navbar = () => {
     } else {
       // Logged Out State
       return (
-        // 🛑 FIX: Changed to match App.jsx path="/auth"
         <AuthButton to="/auth" onClick={() => setIsMobileMenuOpen(false)}> 
           <FaUser /> Login/Register
         </AuthButton>
@@ -260,7 +256,6 @@ const Navbar = () => {
             </UserMenuItem>
           </>
         ) : (
-          // 🛑 FIX: Changed to match App.jsx path="/auth"
           <AuthButton to="/auth" onClick={() => setIsMobileMenuOpen(false)}> 
             <FaUser /> Login/Register
           </AuthButton>
