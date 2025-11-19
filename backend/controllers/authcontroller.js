@@ -1,11 +1,8 @@
 const asyncHandler = require('express-async-handler');
-// FIX: Using the plural 'generatetokens' to match your file name.
 const generateToken = require('../utils/generatetokens'); 
 const User = require('../models/user');
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
-// @access  Public
+
 const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
 
@@ -19,7 +16,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         username,
         email,
-        password, // Password hashing handled in user model pre-save hook
+        password, 
     });
 
     if (user) {
@@ -36,9 +33,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 });
 
-// @desc    Authenticate user & get token
-// @route   POST /api/auth/login
-// @access  Public
+
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
